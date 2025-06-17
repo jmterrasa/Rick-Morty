@@ -21,17 +21,6 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 - "MockCharacterFetcher" y "MockURLProtocol" que conforma a "CharacterFetchable".
 - Se simulan respuestas JSON y errores.
 
-## Estructura
-
-RickAndMortyApp/
-├── Models/              # Modelos decodificables de la API
-├── Networking/          # Servicios y protocolo para fetch
-├── ViewModels/          # Lógica de presentación
-├── Views/               # SwiftUI Views (List, Detail, Row…)
-├── Resources/           # Archivos YAML, imágenes, etc.
-├── Extensions/          # Utilidades varias
-└── SupportingFiles/     # Entrada principal y config SwiftData
-
 ## Dependencias
 
 - SwiftUI
