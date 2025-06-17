@@ -4,6 +4,7 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 
 ## Funcionalidades
 
+- SwiftUI
 - MVVM
 - Coordinator
 - PoP (Protocol Oriented Programming)
