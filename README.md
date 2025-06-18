@@ -16,6 +16,7 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 - FavoritesView usa List con .onDelete para swipe y eliminación.
 - Caché de imágenes para mejor rendimiento
 - Localización de textos con SwiftGen + YAML
+- Package local ImageLoaderKit para caché de imágenes
 
 ## Unit Tests
 
