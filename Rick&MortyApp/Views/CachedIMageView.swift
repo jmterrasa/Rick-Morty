@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ImageLoaderKit
 
 struct CachedImageView<Content: View>: View {
     @StateObject private var loader: ImageLoader

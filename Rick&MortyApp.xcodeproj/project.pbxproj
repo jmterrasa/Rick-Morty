@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1D49B14C2E0071E0007EE9F3 /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = 1D49B12E2E0071E0007EE9F3 /* swiftgen.yml */; };
+		1D7CD05F2E02F58700F5CD56 /* ImageLoaderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1D7CD05E2E02F58700F5CD56 /* ImageLoaderKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D7CD05F2E02F58700F5CD56 /* ImageLoaderKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +128,8 @@
 			);
 			name = "Rick&MortyApp";
 			packageProductDependencies = (
+				1DA92EA92E02F3D800B578BB /* ImageLoaderKit */,
+				1D7CD05E2E02F58700F5CD56 /* ImageLoaderKit */,
 			);
 			productName = "Rick&MortyApp";
 			productReference = 1D682E6D2DFB240100822464 /* Rick&MortyApp.app */;
@@ -211,6 +215,7 @@
 			mainGroup = 1D682E642DFB240100822464;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				1D7CD05D2E02F58700F5CD56 /* XCLocalSwiftPackageReference "ImageLoader" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1D682E6E2DFB240100822464 /* Products */;
@@ -578,6 +583,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		1D7CD05D2E02F58700F5CD56 /* XCLocalSwiftPackageReference "ImageLoader" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ImageLoader;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1D7CD05E2E02F58700F5CD56 /* ImageLoaderKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ImageLoaderKit;
+		};
+		1DA92EA92E02F3D800B578BB /* ImageLoaderKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ImageLoaderKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1D682E652DFB240100822464 /* Project object */;
 }
