@@ -126,8 +126,6 @@
 			);
 			name = "Rick&MortyApp";
 			packageProductDependencies = (
-				1DB9147D2E006B73004C88E6 /* SwiftGenCLI */,
-				1DB9147F2E006B78004C88E6 /* SwiftGenKit */,
 			);
 			productName = "Rick&MortyApp";
 			productReference = 1D682E6D2DFB240100822464 /* Rick&MortyApp.app */;
@@ -213,7 +211,6 @@
 			mainGroup = 1D682E642DFB240100822464;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				1DC5EC4F2E005C1D000FAEAD /* XCRemoteSwiftPackageReference "SwiftGen" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1D682E6E2DFB240100822464 /* Products */;
@@ -581,30 +578,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		1DC5EC4F2E005C1D000FAEAD /* XCRemoteSwiftPackageReference "SwiftGen" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftGen/SwiftGen";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.6.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		1DB9147D2E006B73004C88E6 /* SwiftGenCLI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1DC5EC4F2E005C1D000FAEAD /* XCRemoteSwiftPackageReference "SwiftGen" */;
-			productName = SwiftGenCLI;
-		};
-		1DB9147F2E006B78004C88E6 /* SwiftGenKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1DC5EC4F2E005C1D000FAEAD /* XCRemoteSwiftPackageReference "SwiftGen" */;
-			productName = SwiftGenKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1D682E652DFB240100822464 /* Project object */;
 }
