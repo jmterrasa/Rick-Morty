@@ -22,7 +22,7 @@ struct CharactersRootView: View {
             NavigationStack(path: $coordinator.path) {
                 CharacterGridView(
                     viewModel: viewModel,
-                    coordinator: coordinator,
+                    coordinator: coordinator
                     
                 )
                 .navigationTitle(Text(L10n.charactersTitle))

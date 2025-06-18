@@ -89,7 +89,7 @@ struct CharacterRowView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             )
         }
-        .padding(.leading, )
+        .padding(.leading)
     }
 
     private var characterDetails: some View {
