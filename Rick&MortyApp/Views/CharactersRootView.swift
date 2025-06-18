@@ -54,11 +54,3 @@ struct CharactersRootView: View {
     }
 }
 
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: FavoriteCharacter.self, configurations: config)
-    
-    return CharactersRootView()
-        .modelContainer(container)
-        .preferredColorScheme(.dark)
-}

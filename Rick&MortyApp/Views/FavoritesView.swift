@@ -70,25 +70,3 @@ private struct FavoriteRow: View {
         )
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: FavoriteCharacter.self, configurations: config)
-    let sample = FavoriteCharacter(
-        id: 1,
-        name: "Rick Sanchez",
-        image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-        imageData: nil,
-        status: "Alive",
-        species: "Human",
-        gender: "Male",
-        originName: "Earth",
-        locationName: "Citadel of Ricks",
-        firstEpisodeName: "Pilot"
-    )
-    container.mainContext.insert(sample)
-
-    return FavoritesView()
-        .modelContainer(container)
-        .preferredColorScheme(.dark)
-}

@@ -22,7 +22,7 @@ struct CharacterRowView: View {
     var isFavorite: Bool {
         favorites.contains { $0.id == viewModel.character.id }
     }
-
+    
     var body: some View {
         ZStack(alignment: .top) {
             rowContent
@@ -42,7 +42,7 @@ struct CharacterRowView: View {
                         onTap()
                     }
                 }
-
+            
             if showToast {
                 Text(toastMessage)
                     .font(.caption)
@@ -59,18 +59,18 @@ struct CharacterRowView: View {
         .contentShape(Rectangle())
         .frame(height: 170)
     }
-
+    
     private var rowContent: some View {
         HStack(alignment: .center, spacing: 20) {
             characterImage
                 .frame(width: 130, height: 130)
                 .padding(.leading, 8)
-
+            
             characterDetails
                 .padding(.leading, 8)
-
+            
             Spacer(minLength: 0)
-
+            
             if showFavoriteButton {
                 favoriteButton
             }
@@ -78,7 +78,7 @@ struct CharacterRowView: View {
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
     }
-
+    
     private var characterImage: some View {
         CachedImageView(url: URL(string: viewModel.character.image)!) { image in
             AnyView(
@@ -91,7 +91,7 @@ struct CharacterRowView: View {
         }
         .padding(.leading)
     }
-
+    
     private var characterDetails: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(viewModel.character.name)
@@ -100,7 +100,7 @@ struct CharacterRowView: View {
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
-
+            
             HStack(spacing: 6) {
                 Circle()
                     .fill(viewModel.character.status.color)
@@ -111,21 +111,21 @@ struct CharacterRowView: View {
                     .lineLimit(2)
                     .minimumScaleFactor(0.7)
             }
-
+            
             Text(L10n.lastKnownLocation)
                 .font(.caption)
                 .foregroundColor(.gray)
-           
+            
             Text(viewModel.character.location.localizedName)
                 .font(.caption2)
                 .foregroundColor(.white)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
-
+            
             Text(L10n.firstSeenIn)
                 .font(.caption)
                 .foregroundColor(.gray)
-
+            
             if let episodeName = viewModel.character.firstEpisodeName {
                 Text(episodeName)
                     .font(.caption2)
@@ -139,7 +139,7 @@ struct CharacterRowView: View {
             }
         }
     }
-
+    
     private var favoriteButton: some View {
         VStack {
             Button {
@@ -152,14 +152,14 @@ struct CharacterRowView: View {
                     .clipShape(Circle())
             }
             .buttonStyle(.plain)
-
+            
             Spacer()
         }
     }
-
+    
     private func handleFavoriteToggle() {
         let c = viewModel.character
-
+        
         let didAdd = favoritesManager.toggle(character: c, imageData: viewModel.imageData)
         toastMessage = didAdd ? L10n.addedToFavorites : L10n.removedFromFavorites
         showTemporaryToast()
