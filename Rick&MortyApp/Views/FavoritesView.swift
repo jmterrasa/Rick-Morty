@@ -10,7 +10,7 @@ import SwiftData
 
 struct FavoritesView: View {
     @Query var favorites: [FavoriteCharacter]
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.favoritesManager) private var favoritesManager
     @Namespace private var namespace
 
     var body: some View {
@@ -35,8 +35,7 @@ struct FavoritesView: View {
     }
 
     private func delete(_ fav: FavoriteCharacter) {
-        modelContext.delete(fav)
-        try? modelContext.save()
+        favoritesManager.delete(fav)
     }
 }
 

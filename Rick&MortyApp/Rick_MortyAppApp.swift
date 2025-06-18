@@ -26,6 +26,7 @@ struct Rick_MortyAppApp: App {
     var body: some Scene {
         WindowGroup {
             SplashView()
+                .environment(\.favoritesManager, FavoritesManager(context: sharedModelContainer.mainContext))
         }
         .modelContainer(sharedModelContainer)
     }

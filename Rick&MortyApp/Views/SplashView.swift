@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct SplashView: View {
     @State private var isActive = false
@@ -30,10 +29,4 @@ struct SplashView: View {
             }
         }
     }
-}
-
-#Preview {
-    SplashView()
-        .environment(\.modelContext, try! ModelContainer(for: FavoriteCharacter.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)).mainContext)
-        .preferredColorScheme(.dark)
 }

@@ -1,4 +1,4 @@
-//  CharactersViewModel.swift
+//  CharactersGridViewModel.swift
 //  Rick&MortyApp
 //
 //  Created by Jaime Jesús Martínez Terrasa on 12/6/25.
@@ -6,7 +6,7 @@
 import Foundation
 
 @MainActor
-class CharactersViewModel: ObservableObject {
+class CharactersGridViewModel: ObservableObject {
     @Published var characters: [Character] = []
     @Published var isLoading = false
     @Published var errorMessage: String?

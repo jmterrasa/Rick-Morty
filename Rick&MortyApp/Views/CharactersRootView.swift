@@ -9,10 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct CharactersRootView: View {
-    @Environment(\.modelContext) private var context
     @Query private var favorites: [FavoriteCharacter]
-    
-    @StateObject private var viewModel = CharactersViewModel()
+    @StateObject private var viewModel = CharactersGridViewModel()
     @StateObject private var coordinator = NavigationCoordinator()
     @State private var isClosing = false
     @Namespace private var namespace
@@ -20,7 +18,7 @@ struct CharactersRootView: View {
     var body: some View {
         TabView {
             NavigationStack(path: $coordinator.path) {
-                CharacterGridView(
+                CharactersGridView(
                     viewModel: viewModel,
                     coordinator: coordinator
                     

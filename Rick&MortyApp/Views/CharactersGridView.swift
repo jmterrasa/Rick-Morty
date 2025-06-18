@@ -8,13 +8,12 @@
 import SwiftUI
 import SwiftData
 
-struct CharacterGridView: View {
-    @ObservedObject var viewModel: CharactersViewModel
+struct CharactersGridView: View {
+    @ObservedObject var viewModel: CharactersGridViewModel
     @ObservedObject var coordinator: NavigationCoordinator
-    @Environment(\.modelContext) private var context
+    @Environment(\.favoritesManager) private var favoritesManager
     @Query private var favorites: [FavoriteCharacter]
     @Namespace private var namespace
-    
     @State private var debounceTask: Task<Void, Never>? = nil
     
     var body: some View {
@@ -65,7 +64,7 @@ struct CharacterGridView: View {
             if !viewModel.searchText.isEmpty {
                 Button {
                     viewModel.debounceTask?.cancel()
-                    viewModel.searchText = ""      
+                    viewModel.searchText = ""
                     Task { @MainActor in
                         viewModel.reset()
                         await viewModel.loadCharacters(resetAll: true)
@@ -86,32 +85,17 @@ struct CharacterGridView: View {
     
     @ViewBuilder
     private func row(for character: Character) -> some View {
+        let rowViewModel = CharacterRowViewModel(character: character)
+
         CharacterRowView(
-            viewModel: CharacterRowViewModel(character: character),
+            viewModel: rowViewModel,
             namespace: namespace,
             onTap: {
                 let generator = UIImpactFeedbackGenerator(style: .light)
                 generator.impactOccurred()
                 coordinator.push(.characterDetail(character, namespace))
             },
-            onFavorite: { character in
-                if !favorites.contains(where: { $0.id == character.id }) {
-                    let favorite = FavoriteCharacter(
-                        id: character.id,
-                        name: character.name,
-                        image: character.image,
-                        imageData: nil,
-                        status: character.status.localized,
-                        species: character.species.rawValue,
-                        gender: character.gender.localized,
-                        originName: character.origin.name,
-                        locationName: character.location.name,
-                        firstEpisodeName: character.firstEpisodeName
-                    )
-                    context.insert(favorite)
-                    try? context.save()
-                }
-            }
+            showFavoriteButton: true
         )
         .onAppear {
             guard !viewModel.isLoading, viewModel.hasMorePages else { return }

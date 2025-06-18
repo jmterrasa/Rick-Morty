@@ -14,11 +14,11 @@ struct CharacterRowView: View {
     var onFavorite: ((Character) -> Void)? = nil
     var showFavoriteButton: Bool = true
     @State private var isPressed = false
-    @Environment(\.modelContext) private var context
     @Query private var favorites: [FavoriteCharacter]
     @State private var showToast = false
     @State private var toastMessage = ""
-
+    @Environment(\.favoritesManager) private var favoritesManager
+    
     var isFavorite: Bool {
         favorites.contains { $0.id == viewModel.character.id }
     }
@@ -108,16 +108,19 @@ struct CharacterRowView: View {
                 Text("\(viewModel.character.status.localized) - \(viewModel.character.species.localized)")
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.8))
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
             }
 
             Text(L10n.lastKnownLocation)
                 .font(.caption)
                 .foregroundColor(.gray)
+           
             Text(viewModel.character.location.localizedName)
                 .font(.caption2)
                 .foregroundColor(.white)
-                .lineLimit(1)
+                .lineLimit(2)
+                .minimumScaleFactor(0.7)
 
             Text(L10n.firstSeenIn)
                 .font(.caption)
@@ -127,7 +130,8 @@ struct CharacterRowView: View {
                 Text(episodeName)
                     .font(.caption2)
                     .foregroundColor(.white)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
             } else {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -156,32 +160,11 @@ struct CharacterRowView: View {
     private func handleFavoriteToggle() {
         let c = viewModel.character
 
-        if isFavorite {
-            if let existing = favorites.first(where: { $0.id == c.id }) {
-                context.delete(existing)
-                toastMessage = L10n.removedFromFavorites
-            }
-        } else {
-            let favorite = FavoriteCharacter(
-                id: c.id,
-                name: c.name,
-                image: c.image,
-                imageData: viewModel.imageData,
-                status: c.status.rawValue,
-                species: c.species.rawValue,
-                gender: c.gender.rawValue,
-                originName: c.origin.name,
-                locationName: c.location.name,
-                firstEpisodeName: c.firstEpisodeName
-            )
-            context.insert(favorite)
-            toastMessage = L10n.addedToFavorites
-        }
-
-        try? context.save()
+        let didAdd = favoritesManager.toggle(character: c, imageData: viewModel.imageData)
+        toastMessage = didAdd ? L10n.addedToFavorites : L10n.removedFromFavorites
         showTemporaryToast()
     }
-
+    
     private func showTemporaryToast() {
         withAnimation {
             showToast = true
