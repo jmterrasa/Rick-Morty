@@ -24,20 +24,11 @@ Aplicación SwiftUI que consume la API de Rick and Morty (https://rickandmortyap
 - "MockCharacterFetcher" y "MockURLProtocol" que conforma a "CharacterFetchable".
 - Se simulan respuestas JSON y errores.
 
-## Dependencias
-
-- SwiftUI
-- SwiftData
-- SwiftGen (para L10n)
-- async/await
-- URLCache personalizado para CachedImageView
-
 ## Cómo
 
 1. Clona el repositorio.
 2. Asegúrate de tener Xcode 15+.
-3. Ejecuta "swiftgen" en la raíz del proyecto en el terminal.
-4. Ejecuta el proyecto en simulador o dispositivo real.
+3. Ejecuta el proyecto en simulador o dispositivo real.
 
 ## Localización
 
