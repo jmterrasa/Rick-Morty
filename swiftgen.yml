@@ -1,0 +1,6 @@
+strings:
+  inputs:
+    - Rick&MortyApp/Resources/en.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: Rick&MortyApp/Generated/Strings.swift
