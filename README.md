@@ -1,6 +1,6 @@
 # Rick & Morty App
 
-Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.com/) para mostrar personajes y detalles. Soporta búsqueda, paginación, favoritos y vista en detalle animada.
+Aplicación SwiftUI que consume la API de Rick and Morty (https://rickandmortyapi.com/) para mostrar personajes y detalles. Soporta búsqueda, paginación, favoritos y vista en detalle animada.
 
 ## Funcionalidades
 
@@ -9,6 +9,7 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 - Coordinator
 - PoP (Protocol Oriented Programming)
 - Concurrency
+- Combine
 - Búsqueda por nombre con debounce
 - Paginación al hacer scroll
 - Prefetching
