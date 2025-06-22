@@ -32,7 +32,7 @@ Aplicación SwiftUI que consume la API de Rick and Morty (https://rickandmortyap
 
 ## Localización
 
-Toda la interfaz soporta localización usando "SwiftGen". Para añadir nuevas traducciones, edita el archivo "strings.yml" y vuelve a ejecutar "swiftgen".
+Toda la interfaz soporta localización usando "SwiftGen". Para añadir nuevas traducciones, edita el archivo Localizable.strings (en) y ejecuta "swiftgen" en la terminal en la raíz del proyecto.
 
 ## Autor
 
