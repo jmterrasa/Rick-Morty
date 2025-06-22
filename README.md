@@ -1,6 +1,6 @@
 # Rick & Morty App
 
-Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.com/) para mostrar personajes y detalles. Soporta búsqueda, paginación, favoritos y vista en detalle animada.
+Aplicación SwiftUI que consume la API de Rick and Morty (https://rickandmortyapi.com/) para mostrar personajes y detalles. Soporta búsqueda, paginación, favoritos y vista en detalle animada.
 
 ## Funcionalidades
 
@@ -9,6 +9,7 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 - Coordinator
 - PoP (Protocol Oriented Programming)
 - Concurrency
+- Combine
 - Búsqueda por nombre con debounce
 - Paginación al hacer scroll
 - Prefetching
@@ -23,24 +24,15 @@ Aplicación SwiftUI que consume la [Rick and Morty API](https://rickandmortyapi.
 - "MockCharacterFetcher" y "MockURLProtocol" que conforma a "CharacterFetchable".
 - Se simulan respuestas JSON y errores.
 
-## Dependencias
-
-- SwiftUI
-- SwiftData
-- SwiftGen (para L10n)
-- async/await
-- URLCache personalizado para CachedImageView
-
 ## Cómo
 
 1. Clona el repositorio.
 2. Asegúrate de tener Xcode 15+.
-3. Ejecuta "swiftgen" en la raíz del proyecto en el terminal.
-4. Ejecuta el proyecto en simulador o dispositivo real.
+3. Ejecuta el proyecto en simulador o dispositivo real.
 
 ## Localización
 
-Toda la interfaz soporta localización usando "SwiftGen". Para añadir nuevas traducciones, edita el archivo "strings.yml" y vuelve a ejecutar "swiftgen".
+Toda la interfaz soporta localización usando "SwiftGen". Para añadir nuevas traducciones, edita el archivo Localizable.strings (en) y ejecuta "swiftgen" en la terminal en la raíz del proyecto.
 
 ## Autor
 
