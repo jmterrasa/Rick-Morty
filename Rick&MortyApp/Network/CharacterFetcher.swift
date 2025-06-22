@@ -9,7 +9,6 @@ import Foundation
 
 protocol CharacterFetchable {
     func fetchCharacters(page: Int, name: String?) async throws -> CharactersListResponse
-    func fetchEpisodeName(from url: URL) async throws -> String
 }
 
 final class CharacterFetcher: CharacterFetchable {
