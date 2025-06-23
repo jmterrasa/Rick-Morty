@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum AppRoute: Hashable {
-    case characterDetail(Character, Namespace.ID)
+    case characterDetail(CharacterViewModel, Namespace.ID)
 
     static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
         switch (lhs, rhs) {

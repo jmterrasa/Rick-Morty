@@ -12,18 +12,18 @@ struct CharacterDetailView: View {
     @State private var visibleRows: [Bool] = Array(repeating: false, count: 5)
     @State private var showName = false
     @State private var showImage = false
-
+    
     var body: some View {
         ZStack {
             LinearGradient(colors: [.black, .gray.opacity(0.3)], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
                 .opacity(viewModel.showDetails ? 1 : 0)
                 .animation(.easeInOut(duration: 0.3), value: viewModel.showDetails)
-
+            
             ScrollView {
                 VStack(spacing: 24) {
                     characterImageView()
-
+                    
                     if viewModel.showDetails {
                         VStack(spacing: 20) {
                             Text(viewModel.character.name)
@@ -35,7 +35,7 @@ struct CharacterDetailView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity)
                                 .padding(.bottom, 4)
-
+                            
                             characterInfoPanel()
                         }
                         .padding(.horizontal)
@@ -54,17 +54,16 @@ struct CharacterDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Task {
-                withAnimation(.easeOut(duration: 0.5)) { showImage = true }
-                try? await Task.sleep(nanoseconds: 50_000_000)
-                withAnimation(.easeOut(duration: 0.4)) { showName = true }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                withAnimation(.easeOut(duration: 0.4)) { viewModel.startPresentationAnimation() }
+                withAnimation(.easeOut(duration: 0.3)) { showImage = true }
+                try? await Task.sleep(nanoseconds: 20_000_000)
+                withAnimation(.easeOut(duration: 0.25)) { showName = true }
+                try? await Task.sleep(nanoseconds: 40_000_000)
+                withAnimation(.easeOut(duration: 0.25)) { viewModel.startPresentationAnimation() }
 
                 for i in 0..<visibleRows.count {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45 + Double(i) * 0.07) {
-                        withAnimation {
-                            visibleRows[i] = true
-                        }
+                    try? await Task.sleep(nanoseconds: UInt64(0.2 * 1_000_000_000) + UInt64(Double(i) * 0.03 * 1_000_000_000))
+                    withAnimation {
+                        visibleRows[i] = true
                     }
                 }
             }
@@ -73,7 +72,7 @@ struct CharacterDetailView: View {
             viewModel.showDetails = false
         }
     }
-
+    
     @ViewBuilder
     private func characterImageView() -> some View {
         CachedImageView(url: URL(string: viewModel.character.image)!) { image in
@@ -91,11 +90,11 @@ struct CharacterDetailView: View {
                 .opacity(showImage ? 1 : 0)
                 .scaleEffect(showImage ? 1 : 0.9)
                 .animation(.easeOut(duration: 0.5), value: showImage)
-
+            
             return AnyView(styledImage)
         }
     }
-
+    
     @ViewBuilder
     private func characterInfoPanel() -> some View {
         VStack(spacing: 14) {
@@ -105,29 +104,29 @@ struct CharacterDetailView: View {
                 color: viewModel.character.status.color,
                 isVisible: visibleRows[0]
             )
-
+            
             let species = Species(rawValue: viewModel.character.species.rawValue) ?? .unknown
             labeledRow(
                 title: L10n.species,
                 value: species.localized,
                 isVisible: visibleRows[1]
             )
-
+            
             labeledRow(
                 title: L10n.gender,
                 value: viewModel.character.gender.localized,
                 isVisible: visibleRows[2]
             )
-
+            
             labeledRow(
                 title: L10n.origin,
-                value: viewModel.character.origin.localizedName,
+                value: viewModel.character.origin.localized,
                 isVisible: visibleRows[3]
             )
-
+            
             labeledRow(
                 title: L10n.location,
-                value: viewModel.character.location.localizedName,
+                value: viewModel.character.location.localized,
                 isVisible: visibleRows[4]
             )
         }
@@ -141,7 +140,7 @@ struct CharacterDetailView: View {
         )
         .shadow(radius: 10)
     }
-
+    
     private func labeledRow(title: String, value: String, color: Color? = nil, isVisible: Bool) -> some View {
         HStack(alignment: .center, spacing: 12) {
             if let color = color {
@@ -149,7 +148,7 @@ struct CharacterDetailView: View {
                     .fill(color)
                     .frame(width: 10, height: 10)
             }
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(title.uppercased())
                     .font(.caption)
@@ -158,7 +157,7 @@ struct CharacterDetailView: View {
                     .font(.body)
                     .foregroundColor(.white)
             }
-
+            
             Spacer()
         }
         .opacity(isVisible ? 1 : 0)

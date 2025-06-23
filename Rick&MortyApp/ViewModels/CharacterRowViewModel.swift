@@ -10,11 +10,11 @@ import SwiftUI
 
 @MainActor
 final class CharacterRowViewModel: ObservableObject {
-    let character: Character
+    let character: CharacterViewModel
     @Published var isPressed = false
     @Published var imageData: Data?
     
-    init(character: Character, imageData: Data? = nil) {
+    init(character: CharacterViewModel, imageData: Data? = nil) {
         self.character = character
         self.imageData = imageData
     }

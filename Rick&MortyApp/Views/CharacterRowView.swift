@@ -37,7 +37,8 @@ struct CharacterRowView: View {
                 .animation(.easeOut(duration: 0.15), value: isPressed)
                 .onTapGesture {
                     isPressed = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                    Task {
+                        try? await Task.sleep(nanoseconds: 120_000_000)
                         isPressed = false
                         onTap()
                     }
@@ -80,7 +81,7 @@ struct CharacterRowView: View {
     }
     
     private var characterImage: some View {
-        CachedImageView(url: URL(string: viewModel.character.image)!) { image in
+        CachedImageView(url: URL(string: viewModel.character.imageURL?.absoluteString ?? "")!) { image in
             AnyView(
                 image
                     .resizable()
@@ -103,9 +104,9 @@ struct CharacterRowView: View {
             
             HStack(spacing: 6) {
                 Circle()
-                    .fill(viewModel.character.status.color)
+                    .fill(viewModel.character.statusRaw.color)
                     .frame(width: 10, height: 10)
-                Text("\(viewModel.character.status.localized) - \(viewModel.character.species.localized)")
+                Text("\(viewModel.character.status) - \(viewModel.character.species)")
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.8))
                     .lineLimit(2)
@@ -115,16 +116,19 @@ struct CharacterRowView: View {
             Text(L10n.lastKnownLocation)
                 .font(.caption)
                 .foregroundColor(.gray)
+                .padding(.top, 4)
             
-            Text(viewModel.character.location.localizedName)
+            Text(viewModel.character.location.localized)
                 .font(.caption2)
                 .foregroundColor(.white)
-                .lineLimit(2)
+                .lineLimit(1)
                 .minimumScaleFactor(0.7)
             
             Text(L10n.firstSeenIn)
                 .font(.caption)
                 .foregroundColor(.gray)
+                .padding(.top, 6)
+            
             
             if let episodeName = viewModel.character.firstEpisodeName {
                 Text(episodeName)
@@ -138,6 +142,7 @@ struct CharacterRowView: View {
                     .scaleEffect(0.7)
             }
         }
+        .frame(maxHeight: .infinity, alignment: .topLeading)
     }
     
     private var favoriteButton: some View {
@@ -158,9 +163,22 @@ struct CharacterRowView: View {
     }
     
     private func handleFavoriteToggle() {
-        let c = viewModel.character
-        
-        let didAdd = favoritesManager.toggle(character: c, imageData: viewModel.imageData)
+        let character = Character(
+            id: viewModel.character.id,
+            name: viewModel.character.name,
+            status: viewModel.character.statusRaw,
+            species: viewModel.character.speciesRaw,
+            type: "",
+            gender: viewModel.character.gender,
+            origin: .init(name: viewModel.character.origin.name, url: ""),
+            location: .init(name: viewModel.character.location.name, url: ""),
+            image: viewModel.character.imageURL?.absoluteString ?? "",
+            episode: [],
+            url: "",
+            created: "",
+            firstEpisodeName: viewModel.character.firstEpisodeName ?? ""
+        )
+        let didAdd = favoritesManager.toggle(character: character, imageData: viewModel.imageData)
         toastMessage = didAdd ? L10n.addedToFavorites : L10n.removedFromFavorites
         showTemporaryToast()
     }
@@ -169,7 +187,8 @@ struct CharacterRowView: View {
         withAnimation {
             showToast = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
             withAnimation {
                 showToast = false
             }

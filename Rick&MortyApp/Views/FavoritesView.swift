@@ -12,7 +12,7 @@ struct FavoritesView: View {
     @Query var favorites: [FavoriteCharacter]
     @Environment(\.favoritesManager) private var favoritesManager
     @Namespace private var namespace
-
+    
     var body: some View {
         NavigationStack {
             List {
@@ -33,7 +33,7 @@ struct FavoritesView: View {
             .preferredColorScheme(.dark)
         }
     }
-
+    
     private func delete(_ fav: FavoriteCharacter) {
         favoritesManager.delete(fav)
     }
@@ -42,7 +42,7 @@ struct FavoritesView: View {
 private struct FavoriteRow: View {
     let fav: FavoriteCharacter
     let namespace: Namespace.ID
-
+    
     var body: some View {
         let character = Character(
             id: fav.id,
@@ -59,9 +59,10 @@ private struct FavoriteRow: View {
             created: "",
             firstEpisodeName: fav.firstEpisodeName
         )
-
-        let viewModel = CharacterRowViewModel(character: character, imageData: fav.imageData)
-
+        
+        let characterViewModel = CharacterViewModel(from: character)
+        let viewModel = CharacterRowViewModel(character: characterViewModel, imageData: fav.imageData)
+        
         CharacterRowView(
             viewModel: viewModel,
             namespace: namespace,

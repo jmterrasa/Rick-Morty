@@ -8,25 +8,31 @@
 import SwiftUI
 
 struct SplashView: View {
-    @State private var isActive = false
-    
+    @State private var isReady = false
+    @StateObject private var viewModel = CharactersGridViewModel()
+
     var body: some View {
-        if isActive {
-            CharactersRootView()
-        } else {
-            ZStack {
-                Image("RickAndMortySplash")
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        Group {
+            if isReady {
+                CharactersRootView(viewModel: viewModel)
+            } else {
+                ZStack {
+                    Image("RickAndMortySplash")
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                }
+                .task {
+                    await loadInitialData()
                     withAnimation {
-                        isActive = true
+                        isReady = true
                     }
                 }
             }
         }
+    }
+
+    private func loadInitialData() async {
+        await viewModel.loadCharacters(resetAll: true)
     }
 }

@@ -3,118 +3,172 @@
 //
 //  Created by Jaime Jesús Martínez Terrasa on 12/6/25.
 
+import SwiftUI
 import Foundation
+
+enum ViewState: Equatable {
+    case idle
+    case loading
+    case loaded([Character])
+    case error(String)
+}
+
+enum ViewEvent {
+    case reset
+    case startLoading
+    case loadSuccess([Character], hasMorePages: Bool)
+    case loadFailure(String)
+    case search(String)
+    case loadMore
+}
 
 @MainActor
 class CharactersGridViewModel: ObservableObject {
-    @Published var characters: [Character] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published private(set) var state: ViewState = .idle
     @Published var searchText: String = ""
     
     private var currentPage = 1
     var hasMorePages = true
     private let service: CharacterFetchable
-    var debounceTask: Task<Void, Never>?
+    var allCharacters: [Character] = []
+    private var debounceTask: Task<Void, Never>?
     
-    var isSearching: Bool {
-        !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
+    var characters: [Character] { allCharacters }
+    var isLoading: Bool { state == .loading }
+    var isSearching: Bool { !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     
     init(service: CharacterFetchable = CharacterFetcher()) {
         self.service = service
     }
     
-    func loadCharacters(resetAll: Bool = false) async {
-        guard !isLoading, hasMorePages else { return }
-
-        if resetAll {
-            characters = []
+    private func reduce(event: ViewEvent) async {
+        switch (state, event) {
+        case (_, .reset):
             currentPage = 1
             hasMorePages = true
+            allCharacters = []
+            state = .idle
+            
+        case (.idle, .startLoading),
+             (.loaded, .startLoading),
+             (.error, .startLoading):
+            state = .loading
+            
+        case (.loading, .loadSuccess(let characters, let hasMore)):
+            allCharacters.append(contentsOf: characters)
+            currentPage += 1
+            hasMorePages = hasMore
+            state = .loaded(allCharacters)
+            
+        case (.loading, .loadFailure(let message)):
+            state = .error(message)
+            
+        case (.idle, .search(let text)),
+             (.loaded, .search(let text)),
+             (.error, .search(let text)):
+            currentPage = 1
+            hasMorePages = true
+            allCharacters = []
+            state = .loading
+            await performSearch(text: text)
+            
+        case (.loaded, .loadMore),
+             (.idle, .loadMore),
+             (.error, .loadMore):
+            guard !isLoading, hasMorePages else { return }
+            await loadMore()
+            
+        default:
+            break
         }
-
-        isLoading = true
-        errorMessage = nil
-
+    }
+    
+    func loadCharacters(resetAll: Bool = false) async {
+        if resetAll {
+            await reduce(event: .reset)
+        }
+        await reduce(event: .startLoading)
         do {
             let response = try await service.fetchCharacters(page: currentPage, name: nil)
-            if let newCharacters = response.results {
-                let existingIds = Set(characters.map(\.id))
-                let filtered = newCharacters.filter { !existingIds.contains($0.id) }
-                characters.append(contentsOf: filtered)
-            }
-            currentPage += 1
-            hasMorePages = response.info.next != nil
-        } catch {
-            errorMessage = (error as? NetworkError)?.localizedDescription ?? error.localizedDescription
-            print("loadCharacters error: \(error)")
-        }
-
-        isLoading = false
-    }
-    
-    func performSearch() async {
-        isLoading = true
-        errorMessage = nil
-        currentPage = 1
-        hasMorePages = false
-        
-        do {
-            let name = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-            let response = try await service.fetchCharacters(page: 1, name: name)
-            characters = response.results ?? []
+            let newCharacters = response.results ?? []
+            let hasMore = response.info.next != nil
+            await reduce(event: .loadSuccess(newCharacters, hasMorePages: hasMore))
             currentPage = 2
-            hasMorePages = response.info.next != nil
+        } catch let error as NetworkError {
+            await reduce(event: .loadFailure(error.localizedDescription))
         } catch {
-            errorMessage = error.localizedDescription
-            characters = []
-            print("performSearch error: \(error)")
+            await reduce(event: .loadFailure("Unknown error occurred"))
         }
-        
-        isLoading = false
     }
     
-    func loadMoreSearchResults() async {
-        guard !isLoading, hasMorePages else { return }
-
-        isLoading = true
-        errorMessage = nil
-
+    private func performSearch(text: String) async {
+        guard !text.isEmpty else {
+            await loadCharacters(resetAll: true)
+            return
+        }
+        do {
+            let response = try await service.fetchCharacters(page: 1, name: text)
+            let results = response.results ?? []
+            let hasMore = response.info.next != nil
+            await reduce(event: .loadSuccess(results, hasMorePages: hasMore))
+            currentPage = 2
+        } catch let error as NetworkError {
+            await reduce(event: .loadFailure(error.localizedDescription))
+        } catch {
+            await reduce(event: .loadFailure("Unknown error occurred"))
+        }
+    }
+    
+    private func loadMore() async {
+        guard !isLoading else { return }
+        state = .loading
+        
         do {
             let name = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-            let queryName = name.isEmpty ? nil : name
-            let response = try await service.fetchCharacters(page: currentPage, name: queryName)
-
-            if let newCharacters = response.results {
-                let existingIds = Set(characters.map(\.id))
-                let filtered = newCharacters.filter { !existingIds.contains($0.id) }
-                characters.append(contentsOf: filtered)
-            }
-
+            let nextPage = currentPage
             currentPage += 1
-            hasMorePages = response.info.next != nil
-        } catch {
-            errorMessage = error.localizedDescription
-            print("loadMoreSearchResults error: \(error)")
-        }
 
-        isLoading = false
+            let response = try await service.fetchCharacters(page: nextPage, name: isSearching ? name : nil)
+            let newCharacters = response.results ?? []
+            let hasMore = response.info.next != nil
+            await reduce(event: .loadSuccess(newCharacters, hasMorePages: hasMore))
+        } catch let error as NetworkError {
+            await reduce(event: .loadFailure(error.localizedDescription))
+        } catch {
+            await reduce(event: .loadFailure("Unknown error occurred"))
+        }
     }
     
     func scheduleSearchDebounce() {
         debounceTask?.cancel()
-        debounceTask = Task {
-            try? await Task.sleep(nanoseconds: 200_000_000)
-            if isSearching {
-                await performSearch()
+        debounceTask = Task { [weak self] in
+            guard let self else { return }
+            let originalText = self.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            
+            if originalText != self.searchText.trimmingCharacters(in: .whitespacesAndNewlines) {
+                return
+            }
+            
+            if originalText.isEmpty {
+                await self.loadCharacters(resetAll: true)
+            } else {
+                await reduce(event: .search(originalText))
             }
         }
     }
     
-    func reset() {
-        characters = []
-        currentPage = 1
-        hasMorePages = true
+    func loadNextPageIfNeeded() async {
+        await reduce(event: .loadMore)
+    }
+    
+    func reset(clearSearchText: Bool = false) {
+        debounceTask?.cancel()
+        Task {
+            await reduce(event: .reset)
+            if clearSearchText {
+                self.searchText = ""
+            }
+        }
     }
 }

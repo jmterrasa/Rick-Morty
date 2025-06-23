@@ -12,23 +12,22 @@ import SwiftUI
 class CharacterDetailViewModel: ObservableObject {
     @Published var isClosing: Bool = false
     @Published var showDetails = false
-
+    
     let character: Character
     let namespace: Namespace.ID
-
-
+    
     init(character: Character,
          namespace: Namespace.ID) {
         self.character = character
         self.namespace = namespace
     }
-
+    
     func startPresentationAnimation() {
         withAnimation(.easeOut.delay(0.15)) {
             showDetails = true
         }
     }
-
+    
     func triggerDismiss() {
         isClosing = true
     }

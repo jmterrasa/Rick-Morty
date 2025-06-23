@@ -13,7 +13,6 @@ enum NetworkError: Error {
     case invalidResponse
     case serverError(status: Int)
     case decodingError(Error)
-    case parsingError(Error)
 }
 
 extension NetworkError: LocalizedError {
@@ -29,8 +28,6 @@ extension NetworkError: LocalizedError {
             return "Server error with status code \(status)."
         case .decodingError(let error):
             return "Decoding error: \(error.localizedDescription)"
-        case .parsingError(let error):
-            return "Parsing error: \(error.localizedDescription)"
         }
     }
 }

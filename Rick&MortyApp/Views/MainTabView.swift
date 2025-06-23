@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @StateObject private var viewModel = CharactersGridViewModel()
+    
     var body: some View {
         TabView {
-            CharactersRootView()
+            CharactersRootView(viewModel: viewModel)
                 .tabItem {
                     Label(L10n.charactersTitle, systemImage: "person.3.fill")
                 }
@@ -22,4 +24,3 @@ struct MainTabView: View {
         }
     }
 }
-

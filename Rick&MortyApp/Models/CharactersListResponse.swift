@@ -4,7 +4,7 @@
 //
 //  Created by Jaime Jesús Martínez Terrasa on 12/6/25.
 //
-// MARK: - Response
+
 
 import Foundation
 

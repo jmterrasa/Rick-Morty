@@ -10,10 +10,10 @@ import SwiftData
 
 struct CharactersRootView: View {
     @Query private var favorites: [FavoriteCharacter]
-    @StateObject private var viewModel = CharactersGridViewModel()
     @StateObject private var coordinator = NavigationCoordinator()
     @State private var isClosing = false
     @Namespace private var namespace
+    @ObservedObject var viewModel: CharactersGridViewModel
     
     var body: some View {
         TabView {
@@ -27,13 +27,17 @@ struct CharactersRootView: View {
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case let .characterDetail(character, ns):
-                        let detailVM = CharacterDetailViewModel(character: character, namespace: ns)
-                        CharacterDetailView(viewModel: detailVM)
-                            .onChange(of: detailVM.isClosing) { _, newValue in
-                                if newValue {
-                                    coordinator.pop()
+                        if let originalCharacter = viewModel.allCharacters.first(where: { $0.id == character.id }) {
+                            let detailVM = CharacterDetailViewModel(character: originalCharacter, namespace: ns)
+                            CharacterDetailView(viewModel: detailVM)
+                                .onChange(of: detailVM.isClosing) { _, newValue in
+                                    if newValue {
+                                        coordinator.pop()
+                                    }
                                 }
-                            }
+                        } else {
+                            EmptyView()
+                        }
                     }
                 }
             }
@@ -48,9 +52,5 @@ struct CharactersRootView: View {
                 Label(L10n.favoritesTitle, systemImage: "star.fill")
             }
         }
-        .task {
-            await viewModel.loadCharacters()
-        }
     }
 }
-

@@ -13,7 +13,7 @@ struct Location: Codable, Equatable, Hashable {
 }
 
 extension Location {
-    var localizedName: String {
+    var localized: String {
         switch name {
         case "unknown": return L10n.unknown
         case "Earth (C-137)": return L10n.locationEarthC137
