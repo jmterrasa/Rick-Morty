@@ -4,6 +4,7 @@
 //
 //  Created by Jaime Jesús Martínez Terrasa on 23/6/25.
 //
+
 import Foundation
 
 struct CharacterViewModel: Identifiable {

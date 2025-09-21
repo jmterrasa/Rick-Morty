@@ -15,7 +15,6 @@ struct CharactersGridView: View {
     @Query private var favorites: [FavoriteCharacter]
     @Namespace private var namespace
 
-    
     var body: some View {
         VStack {
             searchBar
